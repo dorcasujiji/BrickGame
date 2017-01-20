@@ -247,7 +247,7 @@ public class BrickView extends View {
     @Override
     protected void onDraw(Canvas canvas) { //GOHERE
         //increments levels and resets ball
-        if (undrawn == 3 && level == 1 || undrawn == 3 && level == 2||undrawn==3 && level==3) {
+        if (undrawn == 30 && level == 1 || undrawn == 42 && level == 2||undrawn==24 && level==3) {
             dx += 1;
             dy += 1;
             undrawn = 0;
