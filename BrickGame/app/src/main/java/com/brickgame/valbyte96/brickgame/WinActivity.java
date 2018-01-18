@@ -1,13 +1,14 @@
 package com.brickgame.valbyte96.brickgame;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class WinActivity extends AppCompatActivity {
+public class WinActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

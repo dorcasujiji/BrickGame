@@ -13,18 +13,17 @@ import android.os.Vibrator;
 
 public class Paddle {
     //coordinates of first corner of rectangle
-    private float x;
-    private float y;
+    private float x, y, size;
     private Vibrator v;
     private int[] colors;
 
     //constructor
-    public Paddle(float x, float y, Context context, int[] colors){
+    public Paddle(float x, float y, float size, Context context, int[] colors){
         this.x=x;
         this.y=y;
+        this.size=size;
         this.v =(Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         this.colors=colors;
-
     }
 
     //moves the paddle
@@ -43,13 +42,13 @@ public class Paddle {
     public void draw(Canvas canvas, Paint paint){
         //design 1
         paint.setColor(colors[0]);
-        canvas.drawRect(x,y,x+25,y+25,paint);
+        canvas.drawRect(x,y,x+size,y+size,paint);
         paint.setColor(colors[3]);
-        canvas.drawRect(x+25,y,x+50,y+25,paint);
+        canvas.drawRect(x+size,y,x+(size*2),y+size,paint);
         paint.setColor(colors[1]);
-        canvas.drawRect(x+50,y,x+75,y+25,paint);
+        canvas.drawRect(x+(size*2),y,x+(size*3),y+size,paint);
         paint.setColor(colors[2]);
-        canvas.drawRect(x+75,y,x+100,y+25,paint);
+        canvas.drawRect(x+(size*3),y,x+(size*4),y+size,paint);
 
         //design 2
 //        paint.setColor(colors[2]);
@@ -60,8 +59,6 @@ public class Paddle {
 //        canvas.drawRect(x,y+12,x+100,y+18,paint);
 //        paint.setColor(colors[1]);
 //        canvas.drawRect(x,y+18,x+100,y+24,paint);
-
-
     }
 
     public boolean reflect(float bX, float bY){

@@ -44,18 +44,15 @@ public class Level1 extends View {
         bgPaint = new Paint();
         bgPaint.setColor(Color.rgb(0,0,0));
         for(int i = 0; i <250;i+=50 ){
-            bricksArr[i/50] = new Brick((20+i),(20+i), Color.BLUE);
+            bricksArr[i/50] = new Brick((20+i),(20+i), 45, Color.BLUE);
         }
     }
 
     protected void onDraw(Canvas canvas){
-
-
         for(Brick brick: bricksArr){
             bgPaint.setColor(brick.getColor());
             canvas.drawRect(brick.getX(),brick.getY(),brick.getX()+50,brick.getY()+50,bgPaint);
         }
-
         postInvalidateOnAnimation();
     }
 }

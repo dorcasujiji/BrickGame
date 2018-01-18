@@ -1,13 +1,13 @@
 package com.brickgame.valbyte96.brickgame;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +29,6 @@ public class WelcomeActivity extends AppCompatActivity {
         Intent newIntent = new Intent(this, MainActivity.class);
         newIntent.putExtra("username",username);
         startActivity(newIntent);
-
-
     }
-
 
 }

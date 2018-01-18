@@ -10,13 +10,13 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Vibrator;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.view.WindowManager;
 import java.util.Random;
 
 /**
@@ -29,58 +29,60 @@ public class BrickView extends View {
     private Paddle mPaddle;
     private Ball mBall;
     private ScoreBoard mBoard;
-    private float dx;
-    private float dy;
-    private int score = 0;
-    private int nRows = 5;
-    private int nCols = 6;
-    private int level = 1;
+    private float dx, dy;
+    private int score = 0, nRows = 5, nCols = 6, level = 1 ;
     private Brick[][] brickArray = new Brick[nRows][nCols];
     private Brick[] levelTwoArray = new Brick[42];
     private Brick[] levelThreeArray = new Brick[24];//GOHERE
     private int[] colorArray={Color.rgb(200,0,0),Color.rgb(0,200,0),Color.rgb(0,0,200),Color.rgb(255,222,0)};
     private Random ran = new Random();
-    private int undrawn=0;
-    private int lives=10;
+    private int undrawn=0, lives=0;
     private Vibrator vib;
     private static SoundPool sSoundPool;
     private int ID;
 
+    //Screen size for size of paddle and bricks
+    WindowManager w = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+    Display screensize = w.getDefaultDisplay();
+    private int width = screensize.getWidth();
+    private int height = screensize.getHeight();
+    private int brickSize = width/6 - width/36;
+
 
 
     //<---CONSTRUCTORS-->
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BrickView(Context context) {
         super(context);
         init();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BrickView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BrickView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BrickView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
     //<---INITIALIZER--->
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void init(){
 
         //initialize objects
         mPaint = new Paint();
-        mPaddle = new Paddle(200,650,getContext(),colorArray);
+        mPaddle = new Paddle(width/12,(height-height/10),width/14, getContext(),colorArray);
         mBall = new Ball(250,630);
         mBoard=new ScoreBoard(75,30);
         vib=(Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
@@ -123,9 +125,10 @@ public class BrickView extends View {
     //<--LEVEL SET UP-->
     //sets up level 1
     public void levelOneSetUp(){
+        width = width - width/36; //height = height - height/36;
         for(int i =0; i<nRows; i++) {
             for (int j = 0; j < nCols; j++) {
-                Brick brick = new Brick(j * 90 + 15, i * 60+50, ran.nextInt(4));
+                Brick brick = new Brick(j * width/6 + width/36, i * height/9+width/36, brickSize, ran.nextInt(4));
                 brickArray[i][j] = brick;
             }
         }
@@ -133,118 +136,119 @@ public class BrickView extends View {
 
     //sets up level 2
     public void levelTwoSetUp(){
-        Brick brick0 = new Brick(2 * 72 + 52, 50, 0);
+        Brick brick0 = new Brick(2 * 72 + 52, 50, brickSize, 0);
         levelTwoArray[0]=brick0;
-        Brick brick1 = new Brick(3 * 72 + 52, 50, 0);
+        Brick brick1 = new Brick(3 * 72 + 52, 50, brickSize, 0);
         levelTwoArray[1]=brick1;
 
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 100, 0);
+            Brick brick = new Brick(i * 72 + 122, 100, brickSize, 0);
             levelTwoArray[i+2]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 150, 0);
+            Brick brick = new Brick(i * 72 + 122, 150, brickSize, 0);
             levelTwoArray[i+6]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 200, 0);
+            Brick brick = new Brick(i * 72 + 122, 200, brickSize, 0);
             levelTwoArray[i+10]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 250, 0);
+            Brick brick = new Brick(i * 72 + 122, 250, brickSize, 0);
             levelTwoArray[i+14]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 300, 0);
+            Brick brick = new Brick(i * 72 + 122, 300, brickSize, 0);
             levelTwoArray[i+18]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 350, 0);
+            Brick brick = new Brick(i * 72 + 122, 350, brickSize, 0);
             levelTwoArray[i+22]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(i * 72 + 122, 400, 0);
+            Brick brick = new Brick(i * 72 + 122, 400, brickSize, 0);
             levelTwoArray[i+26]=brick;
         }
 
         //legs
-        Brick brick2 = new Brick(2 * 100 - 22, 450, 0);
+        Brick brick2 = new Brick(2 * 100 - 22, 450, brickSize, 0);
         levelTwoArray[30]=brick2;
-        Brick brick3 = new Brick(3 * 100 - 22, 450, 0);
+        Brick brick3 = new Brick(3 * 100 - 22, 450, brickSize, 0);
         levelTwoArray[31]=brick3;
 
-        Brick brick4 = new Brick(2 * 100 - 22, 500, 0);
+        Brick brick4 = new Brick(2 * 100 - 22, 500, brickSize, 0);
         levelTwoArray[32]=brick4;
-        Brick brick5 = new Brick(3 * 100 - 22, 500, 0);
+        Brick brick5 = new Brick(3 * 100 - 22, 500, brickSize, 0);
         levelTwoArray[33]=brick5;
         //arms
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(40, 175+50*i, 0);
+            Brick brick = new Brick(40, 175+50*i, brickSize, 0);
             levelTwoArray[i+34]=brick;
         }
         for(int i=0;i<4;i++){
-            Brick brick = new Brick(53+3*122, 175+50*i, 0);
+            Brick brick = new Brick(53+3*122, 175+50*i, brickSize, 0);
             levelTwoArray[i+38]=brick;
         }
     }
     //level three setup
     public void levelThreeSetUp(){
         //yellow bricks
-        Brick brick0 = new Brick(2 * 72 + 52, 50, colorArray[3] );
+        Brick brick0 = new Brick(2 * 72 + 52, 50, brickSize, colorArray[3] );
         levelThreeArray[0]=brick0;
-        Brick brick1 = new Brick(3 * 72 + 52, 50, colorArray[3]);
+        Brick brick1 = new Brick(3 * 72 + 52, 50, brickSize, colorArray[3]);
         levelThreeArray[1]=brick1;
-        Brick brick2 = new Brick(2 * 72 + 52+50, 100, colorArray[3] );
+        Brick brick2 = new Brick(2 * 72 + 52+50, 100, brickSize, colorArray[3] );
         levelThreeArray[2]=brick2;
-        Brick brick3 = new Brick(3 * 72 + 52+50, 100, colorArray[3]);
+        Brick brick3 = new Brick(3 * 72 + 52+50, 100, brickSize, colorArray[3]);
         levelThreeArray[3]=brick3;
-        Brick brick4 = new Brick(2 * 72 + 52+100, 150, colorArray[3] );
+        Brick brick4 = new Brick(2 * 72 + 52+100, 150, brickSize, colorArray[3] );
         levelThreeArray[4]=brick4;
-        Brick brick5 = new Brick(3 * 72 + 52+100, 150, colorArray[3]);
+        Brick brick5 = new Brick(3 * 72 + 52+100, 150, brickSize, colorArray[3]);
         levelThreeArray[5]=brick5;
-        Brick brick6 = new Brick(2 * 72 + 52+150, 200, colorArray[3] );
+        Brick brick6 = new Brick(2 * 72 + 52+150, 200, brickSize, colorArray[3] );
         levelThreeArray[6]=brick6;
-        Brick brick7 = new Brick(3 * 72 + 52+150, 200, colorArray[3]);
+        Brick brick7 = new Brick(3 * 72 + 52+150, 200, brickSize, colorArray[3]);
         levelThreeArray[7]=brick7;
         //blue bricks
-        Brick brick8 = new Brick(2 * 72 + 52+150, 250, colorArray[2] );
+        Brick brick8 = new Brick(2 * 72 + 52+150, 250, brickSize, colorArray[2] );
         levelThreeArray[8]=brick8;
-        Brick brick9 = new Brick(3 * 72 + 52+150, 250, colorArray[2]);
+        Brick brick9 = new Brick(3 * 72 + 52+150, 250, brickSize, colorArray[2]);
         levelThreeArray[9]=brick9;
-        Brick brick10 = new Brick(2 * 72 + 52+115, 300, colorArray[2] );
+        Brick brick10 = new Brick(2 * 72 + 52+115, 300, brickSize, colorArray[2] );
         levelThreeArray[10]=brick10;
-        Brick brick11 = new Brick(3 * 72 + 52+115, 300, colorArray[2]);
+        Brick brick11 = new Brick(3 * 72 + 52+115, 300, brickSize, colorArray[2]);
         levelThreeArray[11]=brick11;
-        Brick brick12 = new Brick(1 * 72 + 52+115, 300, colorArray[2] );
+        Brick brick12 = new Brick(1 * 72 + 52+115, 300, brickSize, colorArray[2] );
         levelThreeArray[12]=brick12;
-        Brick brick13 = new Brick(0 * 72 + 52+115, 300, colorArray[2]);
+        Brick brick13 = new Brick(0 * 72 + 52+115, 300, brickSize, colorArray[2]);
         levelThreeArray[13]=brick13;
-        Brick brick14 = new Brick(1 * 72 + 52+150, 250, colorArray[2] );
+        Brick brick14 = new Brick(1 * 72 + 52+150, 250, brickSize, colorArray[2] );
         levelThreeArray[14]=brick14;
-        Brick brick15 = new Brick(0 * 72 + 52+150, 250, colorArray[2]);
+        Brick brick15 = new Brick(0 * 72 + 52+150, 250, brickSize, colorArray[2]);
         levelThreeArray[15]=brick15;
 
         //green bricks
-        Brick brick16 = new Brick(-1 * 72 + 52+150, 250, colorArray[1] );
+        Brick brick16 = new Brick(-1 * 72 + 52+150, 250, brickSize, colorArray[1] );
         levelThreeArray[16]=brick16;
-        Brick brick17 = new Brick(-2 * 72 + 52+150, 250, colorArray[1]);
+        Brick brick17 = new Brick(-2 * 72 + 52+150, 250, brickSize, colorArray[1]);
         levelThreeArray[17]=brick17;
-        Brick brick18 = new Brick(-1 * 72 + 52+175, 200, colorArray[1] );
+        Brick brick18 = new Brick(-1 * 72 + 52+175, 200, brickSize, colorArray[1] );
         levelThreeArray[18]=brick18;
-        Brick brick19 = new Brick(-2 * 72 + 52+175, 200, colorArray[1]);
+        Brick brick19 = new Brick(-2 * 72 + 52+175, 200, brickSize, colorArray[1]);
         levelThreeArray[19]=brick19;
-        Brick brick20 = new Brick(-1 * 72 + 52+225, 150, colorArray[1] );
+        Brick brick20 = new Brick(-1 * 72 + 52+225, 150, brickSize, colorArray[1] );
         levelThreeArray[20]=brick20;
-        Brick brick21 = new Brick(-2 * 72 + 52+225, 150, colorArray[1]);
+        Brick brick21 = new Brick(-2 * 72 + 52+225, 150, brickSize, colorArray[1]);
         levelThreeArray[21]=brick21;
-        Brick brick22 = new Brick(1 * 72 + 52+50, 100, colorArray[1]);
+        Brick brick22 = new Brick(1 * 72 + 52+50, 100, brickSize, colorArray[1]);
         levelThreeArray[22]=brick22;
-        Brick brick23 = new Brick(-1 * 72 + 52+115, 300, colorArray[1]);
+        Brick brick23 = new Brick(-1 * 72 + 52+115, 300, brickSize, colorArray[1]);
         levelThreeArray[23]=brick23;
     }
 
     //<--PLAYS GAME-->
     @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void onDraw(Canvas canvas) { //GOHERE
         //increments levels and resets ball
         if (undrawn == 30 && level == 1 || undrawn == 42 && level == 2||undrawn==24 && level==3) {
@@ -430,7 +434,5 @@ public class BrickView extends View {
         Random ran = new Random();
         return ran.nextInt(3)+4+level;
     }
-
-
 
 }
